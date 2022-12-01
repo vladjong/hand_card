@@ -30,5 +30,10 @@ func (h *handler) NewRouter() *gin.Engine {
 		auth.POST("/sign-in", h.SignIn)
 	}
 
+	api := router.Group("/api", h.UserIdentity)
+	{
+		api.GET("/cards")
+	}
+
 	return router
 }

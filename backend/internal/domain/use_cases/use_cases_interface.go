@@ -8,4 +8,5 @@ import (
 type AuthUseCaser interface {
 	CreateUser(userDto dto.SignUpDto) error
 	GenerateToken(userDto dto.SingInDto) (entities.Token, error)
+	ParseToken(tokenDto dto.TokenDto) (int, error)
 }

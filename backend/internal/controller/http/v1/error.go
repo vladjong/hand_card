@@ -1,6 +1,15 @@
 package v1
 
-import "github.com/gin-gonic/gin"
+import (
+	"errors"
+
+	"github.com/gin-gonic/gin"
+)
+
+var (
+	ErrorUserIdNotFound = errors.New("user id not found")
+	ErrorUserIdInvalid  = errors.New("user id is of invalid type")
+)
 
 type errorResponse struct {
 	Message string `json:"message"`

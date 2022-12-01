@@ -21,9 +21,11 @@ func (s *postgresStorage) CreateUser(user entities.User) error {
 }
 
 func (s *postgresStorage) GetUser(user entities.User) (id int, err error) {
-	query := `SELECT id FROM users WHERE login=$1 AND password_hash=$2`
+	query := `SELECT id 
+				FROM users
+				WHERE login=$1 AND password_hash=$2`
 	if err := s.db.Get(&id, query, user.Login, user.Password); err != nil {
-		return 0, err
+		return 0, ErrorIncorrectAuth
 	}
 	return id, nil
 }

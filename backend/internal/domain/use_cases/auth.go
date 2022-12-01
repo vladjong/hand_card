@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"crypto/sha1"
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -56,6 +57,23 @@ func (a *authUseCase) GenerateToken(userDto dto.SingInDto) (token entities.Token
 	}
 	token.Name = tokenName
 	return token, nil
+}
+
+func (a *authUseCase) ParseToken(tokenDto dto.TokenDto) (int, error) {
+	token, err := jwt.ParseWithClaims(tokenDto.Token, &entities.TokenClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("invalid signing method")
+		}
+		return []byte(os.Getenv("SIGNED_KEY")), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+	claims, ok := token.Claims.(*entities.TokenClaims)
+	if !ok {
+		return 0, errors.New("token claims are not of type *entities.TokenClaims")
+	}
+	return claims.UserId, nil
 }
 
 func generatePasswordHash(password string) string {
