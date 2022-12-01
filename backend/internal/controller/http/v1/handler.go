@@ -4,14 +4,17 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	usecases "github.com/vladjong/hand_card/internal/domain/use_cases"
 )
 
 type handler struct {
-	// userBalance usecase.UserBalanse
+	authUseCase usecases.AuthUseCaser
 }
 
-func New() *handler {
-	return &handler{}
+func New(authUseCase usecases.AuthUseCaser) *handler {
+	return &handler{
+		authUseCase: authUseCase,
+	}
 }
 
 func (h *handler) NewRouter() *gin.Engine {
@@ -24,6 +27,7 @@ func (h *handler) NewRouter() *gin.Engine {
 	auth := router.Group("/auth")
 	{
 		auth.POST("/sign-up", h.SignUp)
+		auth.POST("/sign-in", h.SignIn)
 	}
 
 	return router

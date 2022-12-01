@@ -9,7 +9,9 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 	"github.com/vladjong/hand_card/config"
+	postgresdb "github.com/vladjong/hand_card/internal/adapter/db/postgres_db"
 	v1 "github.com/vladjong/hand_card/internal/controller/http/v1"
+	usecases "github.com/vladjong/hand_card/internal/domain/use_cases"
 	"github.com/vladjong/hand_card/pkg/postgres"
 	"github.com/vladjong/hand_card/pkg/server"
 )
@@ -39,7 +41,7 @@ func New(cfg *config.Config) (app App, err error) {
 }
 
 func (a *App) Run() error {
-	// logrus.Info("initializing")
+	logrus.Info("app run")
 	a.startHTTP()
 	return nil
 }
@@ -47,7 +49,10 @@ func (a *App) Run() error {
 func (a *App) startHTTP() {
 	logrus.Info("HTTP Server initializing")
 	server := new(server.Server)
-	handlers := v1.New()
+	storage := postgresdb.New(a.postgresClient)
+	auth := usecases.NewAuthUseCase(storage)
+	handlers := v1.New(auth)
+
 	go func() {
 		if err := server.Run(a.cfg.Listen.Port, handlers.NewRouter()); err != nil {
 			logrus.Fatalf("error: occured while running HTTP Server: %s", err.Error())
