@@ -21,5 +21,10 @@ func (h *handler) NewRouter() *gin.Engine {
 
 	router.GET("/healthz", func(c *gin.Context) { c.Status(http.StatusOK) })
 
+	auth := router.Group("/auth")
+	{
+		auth.POST("/sign-up", h.SignUp)
+	}
+
 	return router
 }

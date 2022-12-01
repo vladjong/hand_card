@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(255) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS cards (
+    id SERIAL PRIMARY KEY,
+    full_name VARCHAR(255) NOT NULL,
+    name VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS user_cards (
+    user_id BIGINT REFERENCES users (id) NOT NULL,
+    card_id BIGINT REFERENCES cards (id) NOT NULL
+);
