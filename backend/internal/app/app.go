@@ -51,8 +51,8 @@ func (a *App) startHTTP() {
 	server := new(server.Server)
 	storage := postgresdb.New(a.postgresClient)
 	auth := usecases.NewAuthUseCase(storage)
-	handlers := v1.New(auth)
-
+	card := usecases.NewCardUseCase(storage)
+	handlers := v1.New(auth, card)
 	go func() {
 		if err := server.Run(a.cfg.Listen.Port, handlers.NewRouter()); err != nil {
 			logrus.Fatalf("error: occured while running HTTP Server: %s", err.Error())

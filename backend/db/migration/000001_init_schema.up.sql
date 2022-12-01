@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS cards (
     id SERIAL PRIMARY KEY,
-    full_name VARCHAR(255) NOT NULL,
-    name VARCHAR(255)
+    organization VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS user_cards (

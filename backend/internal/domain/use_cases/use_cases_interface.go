@@ -10,3 +10,8 @@ type AuthUseCaser interface {
 	GenerateToken(userDto dto.SingInDto) (entities.Token, error)
 	ParseToken(tokenDto dto.TokenDto) (int, error)
 }
+
+type CardUseCaser interface {
+	CreateCard(cardDto dto.CardDto, userId int) error
+	GetCards(userId int) (cards []entities.Card, err error)
+}

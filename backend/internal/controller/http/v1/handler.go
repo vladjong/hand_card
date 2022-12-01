@@ -9,11 +9,13 @@ import (
 
 type handler struct {
 	authUseCase usecases.AuthUseCaser
+	cardUseCase usecases.CardUseCaser
 }
 
-func New(authUseCase usecases.AuthUseCaser) *handler {
+func New(authUseCase usecases.AuthUseCaser, cardUseCase usecases.CardUseCaser) *handler {
 	return &handler{
 		authUseCase: authUseCase,
+		cardUseCase: cardUseCase,
 	}
 }
 
@@ -32,7 +34,8 @@ func (h *handler) NewRouter() *gin.Engine {
 
 	api := router.Group("/api", h.UserIdentity)
 	{
-		api.GET("/cards")
+		api.POST("/cards", h.CreateCard)
+		api.GET("/cards", h.GetCards)
 	}
 
 	return router
