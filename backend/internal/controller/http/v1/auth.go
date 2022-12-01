@@ -8,12 +8,12 @@ import (
 )
 
 func (h *handler) SignUp(c *gin.Context) {
-	var userDto dto.SignUpDto
-	if err := c.BindJSON(&userDto); err != nil {
+	var signUpDto dto.SignUpDto
+	if err := c.BindJSON(&signUpDto); err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	if err := h.authUseCase.CreateUser(userDto); err != nil {
+	if err := h.authUseCase.CreateUser(signUpDto); err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -21,11 +21,17 @@ func (h *handler) SignUp(c *gin.Context) {
 }
 
 func (h *handler) SignIn(c *gin.Context) {
-	var input dto.SingInDto
-	if err := c.BindJSON(&input); err != nil {
+	var signInDto dto.SingInDto
+	if err := c.BindJSON(&signInDto); err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	//
-	// c.JSON(http.StatusOK, dto.Token{token})
+	token, err := h.authUseCase.GenerateToken(signInDto)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, dto.TokenDto{
+		Token: token.Name,
+	})
 }
