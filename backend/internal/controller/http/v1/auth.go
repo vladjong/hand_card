@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"github.com/vladjong/hand_card/internal/controller/http/v1/dto"
 )
 
@@ -22,6 +23,7 @@ func (h *handler) SignUp(c *gin.Context) {
 
 func (h *handler) SignIn(c *gin.Context) {
 	var signInDto dto.SingInDto
+	logrus.Infoln(signInDto)
 	if err := c.BindJSON(&signInDto); err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, err.Error())
 		return

@@ -29,7 +29,12 @@ func (h *handler) GetCards(c *gin.Context) {
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
-	cards, err := h.cardUseCase.GetCards(userId)
+	var coordDto dto.Coordinate
+	if err := c.BindJSON(&coordDto); err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	cards, err := h.cardUseCase.GetCards(userId, coordDto)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

@@ -12,6 +12,7 @@ import (
 	postgresdb "github.com/vladjong/hand_card/internal/adapter/db/postgres_db"
 	v1 "github.com/vladjong/hand_card/internal/controller/http/v1"
 	usecases "github.com/vladjong/hand_card/internal/domain/use_cases"
+	gisapi "github.com/vladjong/hand_card/pkg/map_api/gis_api"
 	"github.com/vladjong/hand_card/pkg/postgres"
 	"github.com/vladjong/hand_card/pkg/server"
 )
@@ -48,11 +49,18 @@ func (a *App) Run() error {
 
 func (a *App) startHTTP() {
 	logrus.Info("HTTP Server initializing")
+
 	server := new(server.Server)
 	storage := postgresdb.New(a.postgresClient)
+	gisApi := gisapi.New(gisapi.Config{
+		Key:    os.Getenv("GIS_KEY"),
+		Radius: 250,
+		Sort:   "distance",
+	})
 	auth := usecases.NewAuthUseCase(storage)
-	card := usecases.NewCardUseCase(storage)
+	card := usecases.NewCardUseCase(storage, gisApi)
 	handlers := v1.New(auth, card)
+
 	go func() {
 		if err := server.Run(a.cfg.Listen.Port, handlers.NewRouter()); err != nil {
 			logrus.Fatalf("error: occured while running HTTP Server: %s", err.Error())
