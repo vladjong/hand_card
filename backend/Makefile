@@ -10,3 +10,9 @@ $(APP_BIN):
 
 clean:
 	rm -rf build || true
+
+test:
+	go test ./...
+
+bench:
+	go test -bench= ./...

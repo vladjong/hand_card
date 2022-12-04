@@ -1,9 +1,9 @@
 package usecases
 
 import (
+	"fmt"
 	"regexp"
 
-	"github.com/sirupsen/logrus"
 	"github.com/vladjong/hand_card/internal/adapter/db"
 	"github.com/vladjong/hand_card/internal/controller/http/v1/dto"
 	"github.com/vladjong/hand_card/internal/entities"
@@ -53,24 +53,21 @@ func (c *cardUseCase) GetCards(userId int, coordinate dto.Coordinate) ([]dto.Car
 	if err != nil {
 		return nil, err
 	}
-
 	var mainCards []dto.CardDto
 
 	for category, organisations := range categoryCompanies {
-		for i, organisation := range organisations {
-			logrus.Infoln(cards)
-			logrus.Infoln(organisations)
-			cardDto, ok := c.find(cards, category, organisation)
+		for i, card := range cards {
+			if category != card.Category.CategoryName {
+				continue
+			}
+			cardDto, ok := c.find(organisations, card)
 			if !ok {
 				continue
 			}
-			logrus.Infoln(cards)
-			logrus.Infoln(organisations)
-			deleteOrganisation(organisations, i)
+			deleteCard(cards, i)
 			mainCards = append(mainCards, cardDto)
 		}
 	}
-	logrus.Info(mainCards)
 	return append(mainCards, c.cardsToCardsDto(cards)...), err
 }
 
@@ -89,13 +86,9 @@ func (c *cardUseCase) cardsToCardsDto(cards []entities.Card) (cardsDto []dto.Car
 	return cardsDto
 }
 
-func (c *cardUseCase) find(cards []entities.Card, category, organisation string) (dto.CardDto, bool) {
-	for i, card := range cards {
-		if category != card.Category.CategoryName {
-			continue
-		}
-		if ok, _ := regexp.MatchString(card.Organization, organisation); ok {
-			deleteCard(cards, i)
+func (c *cardUseCase) find(organisations []string, card entities.Card) (dto.CardDto, bool) {
+	for _, organisation := range organisations {
+		if ok, _ := regexp.MatchString(fmt.Sprintf("(?i)%s", card.Organization), organisation); ok {
 			return dto.CardDto{
 				Organization: card.Organization,
 				Number:       card.Number,
@@ -111,11 +104,4 @@ func deleteCard(cards []entities.Card, i int) []entities.Card {
 	cards[len(cards)-1] = entities.Card{}
 	cards = cards[:len(cards)-1]
 	return cards
-}
-
-func deleteOrganisation(organisations []string, i int) []string {
-	organisations[i] = organisations[len(organisations)-1]
-	organisations[len(organisations)-1] = ""
-	organisations = organisations[:len(organisations)-1]
-	return organisations
 }
