@@ -2,6 +2,6 @@ package dto
 
 type CardDto struct {
 	Organization string `json:"organization" binding:"required"`
-	Name         string `json:"name"`
+	Number       string `json:"number"`
 	CategoryName string `json:"category_name" binding:"required"`
 }

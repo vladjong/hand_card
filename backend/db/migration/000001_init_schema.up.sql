@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS categories (
 CREATE TABLE IF NOT EXISTS cards (
     id SERIAL PRIMARY KEY,
     organization VARCHAR(255) NOT NULL,
-    name VARCHAR(255) NOT NULL UNIQUE,
+    number VARCHAR(255) NOT NULL UNIQUE,
     category_id BIGINT REFERENCES categories (id) NOT NULL
 );
 

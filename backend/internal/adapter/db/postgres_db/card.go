@@ -27,12 +27,12 @@ func (s *postgresStorage) CreateCard(card entities.Card, userId int) error {
 	logrus.Info(categoryId)
 
 	var cardId int
-	queryInsertCard := `INSERT INTO cards (name, organization, category_id)
+	queryInsertCard := `INSERT INTO cards (number, organization, category_id)
 						VALUES ($1, $2, $3)
-						ON CONFLICT(name)
-						DO UPDATE SET name=EXCLUDED.name
+						ON CONFLICT(number)
+						DO UPDATE SET number=EXCLUDED.number
 						RETURNING id`
-	row = tx.QueryRow(queryInsertCard, card.Name, card.Organization, categoryId)
+	row = tx.QueryRow(queryInsertCard, card.Number, card.Organization, categoryId)
 	if err := row.Scan(&cardId); err != nil {
 		if rb := tx.Rollback(); rb != nil {
 			return rb
@@ -56,7 +56,7 @@ func (s *postgresStorage) CreateCard(card entities.Card, userId int) error {
 }
 
 func (s *postgresStorage) GetCards(userId int) (cards []entities.Card, err error) {
-	query := `SELECT c.name, c.organization, ct.category_name
+	query := `SELECT c.number, c.organization, ct.category_name
 				FROM user_cards AS uc
 				JOIN cards c ON uc.card_id = c.id
 				JOIN categories ct ON c.category_id = ct.id

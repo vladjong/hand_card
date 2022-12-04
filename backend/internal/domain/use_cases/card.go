@@ -25,11 +25,11 @@ func NewCardUseCase(storage db.Storager, mapApi mapapi.IMapApi) *cardUseCase {
 func (c *cardUseCase) CreateCard(cardDto dto.CardDto, userId int) error {
 	card := entities.Card{
 		Organization: cardDto.Organization,
-		Name:         cardDto.Name,
+		Number:       cardDto.Number,
 		Category:     entities.Category{CategoryName: cardDto.CategoryName},
 	}
-	if len(card.Name) == 0 {
-		card.Name = cardDto.Organization
+	if len(card.Number) == 0 {
+		card.Number = cardDto.Organization
 	}
 	if err := c.storage.CreateCard(card, userId); err != nil {
 		return err
@@ -81,7 +81,7 @@ func (c *cardUseCase) cardsToCardsDto(cards []entities.Card) (cardsDto []dto.Car
 		}
 		cardDto := dto.CardDto{
 			Organization: card.Organization,
-			Name:         card.Name,
+			Number:       card.Number,
 			CategoryName: card.Category.CategoryName,
 		}
 		cardsDto = append(cardsDto, cardDto)
@@ -98,7 +98,7 @@ func (c *cardUseCase) find(cards []entities.Card, category, organisation string)
 			deleteCard(cards, i)
 			return dto.CardDto{
 				Organization: card.Organization,
-				Name:         card.Name,
+				Number:       card.Number,
 				CategoryName: card.Category.CategoryName,
 			}, true
 		}
