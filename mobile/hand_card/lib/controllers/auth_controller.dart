@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hand_card/pages/home_page.dart';
+import 'package:hand_card/service/snack_bar.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/sign-up_page.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
@@ -11,8 +11,6 @@ import '../pages/sign-up_page.dart';
 class AuthController{
 
   final client = http.Client();
-
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   Future signIn(
     String login,
@@ -33,18 +31,20 @@ class AuthController{
       if (statusCode==200) {
         final json = jsonDecode(body);
         var token = json['token'];
-        print(token);
-        final SharedPreferences prefs = await _prefs;
-        await prefs.setString('token', token);
-
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
-        // Navigator.of(context).pushAndRemoveUntil(
-        //   MaterialPageRoute(builder: (BuildContext (context) => SignUpPage()))
-        // );
-        // Navigator.of(context).pushAndRemo
-        print(body);
+         // ignore: use_build_context_synchronously
+         SnackBarService.showSnackBar(
+          context,
+          'Успешно',
+          false,
+        );
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(token.toString())));
       } else {
-        print("Login Error");
+        // ignore: use_build_context_synchronously
+        SnackBarService.showSnackBar(
+          context,
+          'Неправильный логин или пароль. Повторите попытку',
+          true,
+        );
       }
   }
 }

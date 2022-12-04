@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hand_card/controllers/auth_controller.dart';
 import 'package:hand_card/pages/sign-up_page.dart';
+import 'package:email_validator/email_validator.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -38,8 +39,12 @@ class _SigInPageState extends State<SignInPage> {
               // ignore: prefer_const_constructors
               child: Padding(
                 padding: const EdgeInsets.only(left: 20.0),
-                child: TextField(
+                child: TextFormField(
                   controller: loginController,
+                  validator: (value) => value != null && value.length < 2
+                  ? 'Минимум 1 символа'
+                  : null,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   // ignore: prefer_const_constructors
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -59,8 +64,12 @@ class _SigInPageState extends State<SignInPage> {
               ),
               child: Padding(
                 padding: const EdgeInsets.only(left: 20.0),
-                child: TextField(
+                child: TextFormField(
                   controller: passwordController,
+                  validator: (value) => value != null && value.length < 6
+                  ? 'Минимум 6 символов'
+                  : null,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   obscureText: true,
                   // ignore: prefer_const_constructors
                   decoration: InputDecoration(
@@ -98,7 +107,7 @@ class _SigInPageState extends State<SignInPage> {
                 Text("Нет аккаунта?"),
                 TextButton(
                   onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
+                    Navigator.of(context).pushNamed('/sign-up');
                   },
                     child: const Text(
                       'Регистрация',

@@ -147,7 +147,7 @@ class _SignUpPageState extends State<SignUpPage> {
             const SizedBox(height: 10),
             TextButton(
               onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SignInPage()));
+                Navigator.of(context).pushNamed('/sign-in');
               },
               child: const Text(
                 'Уже есть аккаунт',
