@@ -5,11 +5,9 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 class HomePage extends StatelessWidget {
-  HomePage(this.jwt) {}
+  HomePage(this.jwt, {super.key});
 
   final String jwt;
-
-  // Future<List<DiscountCard>> cards = getCards();
 
   Future<List<DiscountCard>> getCards() async {
     print('Bearer $jwt');
@@ -89,17 +87,6 @@ class HomePage extends StatelessWidget {
           ),
       )
     );
-          // FutureBuilder<List<DiscountCard>>(
-          // future: getCards(),
-          // builder: (context, snapshot) {
-          //   if (snapshot.hasData) {
-          //     final cards = snapshot.data!;
-          //     return buildCards(cards);
-          //   } else {
-          //     return const Text("No cards data");
-          //   }
-          // },
-          // )
 
   Widget buildCards(List<DiscountCard> cards) => ListView.builder(
     itemCount: cards.length,
@@ -129,5 +116,4 @@ class HomePage extends StatelessWidget {
       );
     }
   );
-
 }

@@ -4,6 +4,7 @@ import 'sign-in_page.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
+  // ignore: library_private_types_in_public_api
   _SignUpPageState createState() => _SignUpPageState();
 }
 
