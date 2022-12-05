@@ -141,6 +141,8 @@
 
 - `/home_page.dart` - главная страница
 
+![sign](resource/sign-in.png)
+
 ## 5. Диаграмма БД
 
 ![diagram_bd](resource/diagram_bd.png)
