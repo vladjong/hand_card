@@ -37,6 +37,10 @@ func (c *cardUseCase) CreateCard(cardDto dto.CardDto, userId int) error {
 	return nil
 }
 
+func (c *cardUseCase) DeleteCard(userId, id int) error {
+	return c.storage.DeleteCard(userId, id)
+}
+
 func (c *cardUseCase) GetCards(userId int, coordinate dto.Coordinate) ([]dto.CardDto, error) {
 	cards, err := c.storage.GetCards(userId)
 	if err != nil {
@@ -77,6 +81,7 @@ func (c *cardUseCase) cardsToCardsDto(cards []entities.Card) (cardsDto []dto.Car
 			continue
 		}
 		cardDto := dto.CardDto{
+			Id:           card.Id,
 			Organization: card.Organization,
 			Number:       card.Number,
 			CategoryName: card.Category.CategoryName,

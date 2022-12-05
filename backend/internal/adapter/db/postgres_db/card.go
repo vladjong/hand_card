@@ -56,7 +56,7 @@ func (s *postgresStorage) CreateCard(card entities.Card, userId int) error {
 }
 
 func (s *postgresStorage) GetCards(userId int) (cards []entities.Card, err error) {
-	query := `SELECT c.number, c.organization, ct.category_name
+	query := `SELECT c.id, c.number, c.organization, ct.category_name
 				FROM user_cards AS uc
 				JOIN cards c ON uc.card_id = c.id
 				JOIN categories ct ON c.category_id = ct.id
@@ -65,4 +65,28 @@ func (s *postgresStorage) GetCards(userId int) (cards []entities.Card, err error
 		return cards, err
 	}
 	return cards, nil
+}
+
+func (s *postgresStorage) DeleteCard(userId, id int) error {
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	queryDeleteUserCard := `DELETE FROM user_cards WHERE user_id = $1 AND card_id = $2`
+	if _, err := tx.Exec(queryDeleteUserCard, userId, id); err != nil {
+		if rb := tx.Rollback(); rb != nil {
+			return rb
+		}
+		return err
+	}
+
+	queryDeleteCard := `DELETE FROM cards WHERE id = $1`
+	if _, err := tx.Exec(queryDeleteCard, id); err != nil {
+		if rb := tx.Rollback(); rb != nil {
+			return rb
+		}
+		return err
+	}
+	return tx.Commit()
 }

@@ -36,6 +36,7 @@ func (h *handler) NewRouter() *gin.Engine {
 	{
 		api.POST("/cards", h.CreateCard)
 		api.GET("/cards", h.GetCards)
+		api.DELETE("/cards/:id", h.DeleteCard)
 	}
 
 	return router

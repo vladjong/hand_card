@@ -155,11 +155,74 @@
 
 `user_cards` - пользователи и карты
 
-## 6. Use case диаграмма
+## 6. Rest api
+
+### POST
+
+- `/auth/sign-up` Метод регистрации пользователя
+
+Curl:
+```
+curl --location --request POST 'http://localhost:8080/auth/sign-up' \
+--header 'Content-Type: text/plain' \
+--data-raw '{
+    "email": "vladik32g@mail.ru",
+    "password": "qwerty",
+    "login": "vladjong"
+}'
+```
+
+- `/auth/sign-up` Метод входа в систему
+
+Curl:
+```
+curl --location --request POST 'http://localhost:8080/auth/sign-in' \
+--header 'Content-Type: text/plain' \
+--data-raw '{
+    "password": "qwerty",
+    "login": "vladjong"
+}'
+```
+
+- `/api/cards` Метод добавления карты
+
+Curl:
+```
+curl --location --request POST 'http://localhost:8080/api/cards' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzAyOTE3MTMsImlhdCI6MTY3MDI0ODUxMywidXNlcl9pZCI6MX0.zgYDTxuDDDNroIeKIev7XbLnzL64k3OupIWP9elt0_4' \
+--header 'Content-Type: text/plain' \
+--data-raw '{
+    "organization": "Чашка кофе",
+    "number": "A123FE32",
+    "category_name": "Кафе"
+}'
+```
+
+### GET
+
+- `/api/cards` Метод просмотра карт пользователя
+
+Curl:
+```
+curl --location --request GET 'http://localhost:8080/api/cards/?lat=82.897918&lon=54.980332' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzAyOTE4ODcsImlhdCI6MTY3MDI0ODY4NywidXNlcl9pZCI6MX0.wlslwHLuNR37ly73epnTClfVQw-nmVEpQeUgJOpglyU'
+```
+
+### DELETE
+
+- `/api/cards/:id` Метод удаления карты пользователя
+
+Curl:
+```
+curl --location --request DELETE 'http://localhost:8080/api/cards/1' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzAyOTE4ODcsImlhdCI6MTY3MDI0ODY4NywidXNlcl9pZCI6MX0.wlslwHLuNR37ly73epnTClfVQw-nmVEpQeUgJOpglyU'
+```
+
+## 7. Use case диаграмма
 
 ![use_case_diagram](resource/use_case_diagram.png)
 
-## 7. Use case
+## 8. Use case
 
 ### Вход в систему
 
@@ -217,4 +280,36 @@
 |                    |   7   | Система отправляет на устройство пользователя список ранжируемых карт |
 |  Результат         |   -   | Пользователь ввидит на экране свои скидочные карты |
 |  Расширения        |   3а  | Координаты пользователя отсутствуют. Система выводит не ранжированный список карт пользователя |
-|  Расширения        |   4а  | Сбой работы с внешним api. Система выводит не ранжированный список карт пользователя |
+|  Расширения        |   4а  | Сбой работы с внешним api. Система выводит не ранжированный список карт пользователяg |
+
+## Тесты
+
+### Виды тестов:
+
+- Map_api (Api 2Гис)
+
+- Api (Backend приложения)
+
+Метрики:
+
+- Количество пройденных тестов: 10
+
+- Количество проваленных тестов: 4
+
+- Отношение выполненных кейсов к общему числу кейсов: 0.71
+
+- Отношение проваленных кейсов к общему числу кейсов: 0.29
+
+- Среднее время прохождения кейсов:  0.432s
+
+Тест на 100 запросов к API 2Гис: 0.621s
+
+Описание проваленных тестов:
+
+- Карты не сортируются, когда категория указана не верно
+
+- Удаление не верного id карты не выдает ошибки
+
+- Обновление карты не проходит
+
+- Добавляются карты с не корректной категорией

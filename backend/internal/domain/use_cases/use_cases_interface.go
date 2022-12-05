@@ -14,4 +14,5 @@ type AuthUseCaser interface {
 type CardUseCaser interface {
 	CreateCard(cardDto dto.CardDto, userId int) error
 	GetCards(userId int, coordinate dto.Coordinate) ([]dto.CardDto, error)
+	DeleteCard(userId, id int) error
 }

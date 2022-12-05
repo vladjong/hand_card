@@ -8,4 +8,5 @@ type Storager interface {
 
 	CreateCard(card entities.Card, userId int) error
 	GetCards(userId int) (cards []entities.Card, err error)
+	DeleteCard(userId, id int) error
 }
