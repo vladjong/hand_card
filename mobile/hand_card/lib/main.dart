@@ -5,48 +5,41 @@ import 'package:hand_card/pages/sign-up_page.dart';
 import 'package:hand_card/service/user_secure_storage.dart';
 
 Future<void> main() async {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final auth = await UserSecureStorage.getJwt() == null ? false : true;
+
+  runApp(MyApp(auth: auth));
+}
+
+Future<bool> checkToken() async {
+  if (await UserSecureStorage.getJwt() == null) {
+    return false;
+  }
+  return true;
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-  Future<bool> checkToken() async{
-    if (await UserSecureStorage.getJwt() == null) {
-      return false;
-    }
-    return true;
-  }
+  const MyApp({Key? key, required this.auth}) : super(key: key);
+
+  final bool auth;
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: checkToken(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-
-        }
-         return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          pageTransitionsTheme: const PageTransitionsTheme(
-            builders: {
-              TargetPlatform.android: CupertinoPageTransitionsBuilder()
-            }
-          ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+          pageTransitionsTheme: const PageTransitionsTheme(builders: {
+            TargetPlatform.android: CupertinoPageTransitionsBuilder()
+          }),
           primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity
-        ),
-        routes: {
-          '/sign-in':(context) => SignInPage(),
-          '/sign-up':(context) => SignUpPage(),
-          '/':(context) => HomePage(),
-        },
-        initialRoute: '/sign-in',
-        // if (snapshot.data && snapshot.hasData) {
-        //   initialRoute: '/sign-in',
-        // } else {
-        //   initialRoute: '/sign-in',
-        );
+          visualDensity: VisualDensity.adaptivePlatformDensity),
+      routes: {
+        '/sign-in': (context) => SignInPage(),
+        '/sign-up': (context) => SignUpPage(),
+        '/': (context) => HomePage(),
       },
+      initialRoute: auth ? '/' : '/sign-in',
     );
   }
 }

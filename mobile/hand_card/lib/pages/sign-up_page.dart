@@ -18,7 +18,6 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          // ignore: prefer_const_literals_to_create_immutables
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -37,15 +36,11 @@ class _SignUpPageState extends State<SignUpPage> {
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(12),
               ),
-              // ignore: prefer_const_constructors
               child: Padding(
                 padding: const EdgeInsets.only(left: 20.0),
                 child: TextField(
-                  // controller: loginController,
-                  // ignore: prefer_const_constructors
                   controller: emailController,
-                  // ignore: prefer_const_constructors
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Email',
                   ),
@@ -65,11 +60,8 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 20.0),
                 child: TextField(
-                  // controller: loginController,
-                  // ignore: prefer_const_constructors
                   controller: loginController,
-                  // ignore: prefer_const_constructors
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Логин',
                   ),
@@ -86,7 +78,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Padding(
-                padding: EdgeInsets.only(left: 20.0),
+                padding: const EdgeInsets.only(left: 20.0),
                 child: TextField(
                   // controller: passwordController,
                   obscureText: true,

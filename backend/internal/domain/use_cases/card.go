@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
+	"github.com/sirupsen/logrus"
 	"github.com/vladjong/hand_card/internal/adapter/db"
 	"github.com/vladjong/hand_card/internal/controller/http/v1/dto"
 	"github.com/vladjong/hand_card/internal/entities"
@@ -58,6 +59,8 @@ func (c *cardUseCase) GetCards(userId int, coordinate dto.Coordinate) ([]dto.Car
 		return nil, err
 	}
 	var mainCards []dto.CardDto
+
+	logrus.Info(categoryCompanies)
 
 	for category, organisations := range categoryCompanies {
 		for i, card := range cards {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:geolocator/geolocator.dart';
 import 'package:hand_card/model/card.dart';
 import 'package:hand_card/pages/sign-in_page.dart';
 import 'package:hand_card/service/user_secure_storage.dart';
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) =>
     Scaffold(
+      backgroundColor: Colors.black87,
       body: Column(
             children: [
               const SizedBox(height: 30,),
@@ -34,14 +36,15 @@ class _HomePageState extends State<HomePage> {
                       Text(
                       'Мои',
                       style: TextStyle(
-                        fontSize: 28,
-                        color: Colors.deepPurpleAccent,
+                        fontSize: 30,
+                        color: Colors.redAccent,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
                       ' карты',
-                      style: TextStyle(fontSize: 28),
+                      style: TextStyle(fontSize: 30,
+                      color: Colors.white),
                     ),
                     ],),
                     ElevatedButton(
@@ -49,8 +52,8 @@ class _HomePageState extends State<HomePage> {
                       style: ElevatedButton.styleFrom(
                         shape: const CircleBorder(),
                         padding: const EdgeInsets.all(7),
-                        backgroundColor: Colors.deepPurpleAccent,
-                        foregroundColor: Colors.purple,
+                        backgroundColor: Colors.redAccent,
+                        foregroundColor: Colors.red,
                       ),
                       child: const Icon(Icons.add, color: Colors.white,),
                     ),
@@ -82,26 +85,152 @@ class _HomePageState extends State<HomePage> {
       final card = cards[index];
       return Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Card(
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(
-              color: Colors.deepPurpleAccent,
-              width: 7
-            ),
-            borderRadius: BorderRadius.circular(12.0),
-        ),
-        child: Container(
-          width: 330,
-          height: 200,
-          alignment: Alignment.center,
-          padding: const EdgeInsets.all(30),
-          child: Text(card.organization,
-          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.normal),
-          textAlign: TextAlign.center,),
-        ),
-                // title: Text(card.organization)    // subtitle: Text(card.number),
-        ),
+          child: CardWidget(card: card)
       );
     }
   );
+}
+
+class CardWidget extends StatelessWidget {
+  const CardWidget({super.key, required this.card});
+
+  final DiscountCard card;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+          onTap: () => Scaffold.of(context).
+          showBottomSheet((context) => 
+            DetailCardWidget(card: card,)
+          ),
+          child: Card(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              side: const BorderSide(
+                color: Colors.redAccent,
+                width: 7
+              ),
+              borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Container(
+            width: 330,
+            height: 200,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(30),
+            child: Text(
+              card.organization,
+              style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          ),
+        );
+  }
+}
+
+class DetailCardWidget extends StatelessWidget {
+  const DetailCardWidget({super.key, required this.card});
+
+  final DiscountCard card;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 470,
+       width: 393,
+       decoration: const BoxDecoration(
+        color: Colors.black87,
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(20),
+          topLeft: Radius.circular(20),
+          
+        )
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 30,),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Container(
+                width: 350,
+                height: 200,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(30),
+                child: Text(
+                  card.organization,
+                  style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 15,),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: Container(
+              alignment: Alignment.topLeft,
+              child: const Text(
+                "Данные карты",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20,),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: Container(
+              alignment: Alignment.topLeft,
+              child: const Text(
+                "Номер карты",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w300,),
+              ),
+            ),
+          ),
+          const SizedBox(height: 15,),
+          Text(
+            card.number,
+            textAlign: TextAlign.left,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w500,),
+          ),
+          const SizedBox(height: 15,),
+                    Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: Container(
+              alignment: Alignment.topLeft,
+              child: const Text(
+                "Категория карты",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w300,),
+              ),
+            ),
+          ),
+          const SizedBox(height: 15,),
+
+          Text(
+            card.categoryName,
+            textAlign: TextAlign.left,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w500,),
+          ),
+        ]),
+    );
+  }
 }
