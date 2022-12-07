@@ -6,7 +6,7 @@ import 'package:hand_card/service/snack_bar.dart';
 import 'package:http/http.dart' as http;
 
 import '../pages/sign-up_page.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import '../service/user_secure_storage.dart';
 
 class AuthController{
 
@@ -32,12 +32,8 @@ class AuthController{
         final json = jsonDecode(body);
         var token = json['token'];
          // ignore: use_build_context_synchronously
-         SnackBarService.showSnackBar(
-          context,
-          'Успешно',
-          false,
-        );
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(token.toString())));
+        await UserSecureStorage.setJwt(token);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
       } else {
         // ignore: use_build_context_synchronously
         SnackBarService.showSnackBar(

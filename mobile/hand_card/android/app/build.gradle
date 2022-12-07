@@ -52,6 +52,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         minSdkVersion 32
+        
     }
 
     buildTypes {
@@ -60,6 +61,10 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
         }
+    }
+
+    android {
+        compileSdkVersion 33
     }
 }
 

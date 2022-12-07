@@ -1,51 +1,37 @@
 import 'dart:convert';
 import 'package:hand_card/model/card.dart';
+import 'package:hand_card/pages/sign-in_page.dart';
+import 'package:hand_card/service/user_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 
 import 'package:flutter/material.dart';
-class HomePage extends StatelessWidget {
-  HomePage(this.jwt, {super.key});
 
-  final String jwt;
+import '../controllers/home_controller.dart';
 
-  Future<List<DiscountCard>> getCards() async {
-    print('Bearer $jwt');
-    final url = 'http://10.0.2.2:8080/api/cards';
-    final queryCoord = {
-      "lat": 82.897918,
-      "lon": 54.980332
-    };
-    
-    // final uri = Uri.parse(url).replace(queryParameters: queryCoord);
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $jwt',
-      },
-    );
-    print(response.body);
-    final body = json.decode(response.body);
-    return body.map<DiscountCard>(DiscountCard.fromJson).toList();
-  }
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+
+class _HomePageState extends State<HomePage> {
+
+  HomeController homeController = HomeController();
 
   @override
   Widget build(BuildContext context) =>
     Scaffold(
-      body: SafeArea(
-          child: Column(
+      body: Column(
             children: [
-              SizedBox(height: 10,),
+              const SizedBox(height: 30,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    // ignore: prefer_const_literals_to_create_immutables
-                    Row(children: [
-                      const Text(
+                    Row(children: const [
+                      Text(
                       'Мои',
                       style: TextStyle(
                         fontSize: 28,
@@ -53,7 +39,7 @@ class HomePage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Text(
+                    Text(
                       ' карты',
                       style: TextStyle(fontSize: 28),
                     ),
@@ -61,8 +47,8 @@ class HomePage extends StatelessWidget {
                     ElevatedButton(
                       onPressed: (){},
                       style: ElevatedButton.styleFrom(
-                        shape: CircleBorder(),
-                        padding: EdgeInsets.all(7),
+                        shape: const CircleBorder(),
+                        padding: const EdgeInsets.all(7),
                         backgroundColor: Colors.deepPurpleAccent,
                         foregroundColor: Colors.purple,
                       ),
@@ -71,21 +57,22 @@ class HomePage extends StatelessWidget {
                   ]
                 ),
               ),
-              SizedBox(height: 25,),
-              FutureBuilder<List<DiscountCard>>(
-                future: getCards(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final cards = snapshot.data!;
-                    return buildCards(cards);
-                  } else {
-                    return const Text("No cards data");
+              Expanded(
+                child: FutureBuilder<List<DiscountCard>>(
+                  future: homeController.getCards(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final cards = snapshot.data!;
+                      return buildCards(cards);
+                    } else {
+                      return const Text("No cards data");
+                    }
                   }
-                }
               )
+            ),
             ]
           ),
-      )
+      // )
     );
 
   Widget buildCards(List<DiscountCard> cards) => ListView.builder(
@@ -93,26 +80,27 @@ class HomePage extends StatelessWidget {
     shrinkWrap: true,
     itemBuilder: (context, index) {
       final card = cards[index];
-      return Card(
-        color: Colors.grey,
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: ListTile(
-            title: Text(card.organization),
-            trailing: Container(
-              width: 15,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: IconButton(
-                      onPressed:() {
-                       cards.removeAt(index);
-                    }, icon: Icon(Icons.delete, color: Colors.white,)))
-                ],)
+      return Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            side: const BorderSide(
+              color: Colors.deepPurpleAccent,
+              width: 7
             ),
-          ),
+            borderRadius: BorderRadius.circular(12.0),
         ),
-              // title: Text(card.organization)    // subtitle: Text(card.number),
+        child: Container(
+          width: 330,
+          height: 200,
+          alignment: Alignment.center,
+          padding: const EdgeInsets.all(30),
+          child: Text(card.organization,
+          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.normal),
+          textAlign: TextAlign.center,),
+        ),
+                // title: Text(card.organization)    // subtitle: Text(card.number),
+        ),
       );
     }
   );

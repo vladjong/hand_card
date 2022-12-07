@@ -33,7 +33,16 @@ func (h *handler) GetCards(c *gin.Context) {
 		return
 	}
 	var coordDto dto.Coordinate
-	c.BindJSON(&coordDto)
+	coordDto.Lat, err = strconv.ParseFloat(c.Query("lat"), 64)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	coordDto.Lon, err = strconv.ParseFloat(c.Query("lon"), 64)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
 	cards, err := h.cardUseCase.GetCards(userId, coordDto)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())

@@ -95,6 +95,7 @@ func (c *cardUseCase) find(organisations []string, card entities.Card) (dto.Card
 	for _, organisation := range organisations {
 		if ok, _ := regexp.MatchString(fmt.Sprintf("(?i)%s", card.Organization), organisation); ok {
 			return dto.CardDto{
+				Id:           card.Id,
 				Organization: card.Organization,
 				Number:       card.Number,
 				CategoryName: card.Category.CategoryName,
